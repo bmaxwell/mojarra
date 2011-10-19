@@ -66,6 +66,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 /**
  * <B>Util</B> is a class ...
@@ -288,6 +296,95 @@ public class Util {
                 : result.booleanValue());
     }
 
+    public static TransformerFactory createTransformerFactory() {
+         ClassLoader cl = Thread.currentThread().getContextClassLoader();
+         TransformerFactory factory;
+         try {
+             Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+             factory = TransformerFactory.newInstance();
+         } finally {
+             Thread.currentThread().setContextClassLoader(cl);
+         }
+         return factory;
+     }
+
+    public static SAXParserFactory createSAXParserFactory() {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        SAXParserFactory factory;
+        try {
+            Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+            factory = SAXParserFactory.newInstance();
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+        return factory;
+    }
+
+    public static DocumentBuilderFactory createDocumentBuilderFactory() {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        DocumentBuilderFactory factory;
+        try {
+            Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+            factory = DocumentBuilderFactory.newInstance();
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+        return factory;
+    }
+
+    public static SchemaFactory createSchemaFactory(String uri) {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        SchemaFactory factory;
+        try {
+            Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+            factory = SchemaFactory.newInstance(uri);
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+        return factory;
+    }
+
+    public static DocumentBuilder newDocumentBuilder(DocumentBuilderFactory factory) throws Exception
+    {
+        ClassLoader previous = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+            return factory.newDocumentBuilder();
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader(previous);
+        }
+    }
+
+    public static SAXParser newSAXParser(SAXParserFactory factory) throws Exception
+    {
+        ClassLoader previous = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+            return factory.newSAXParser();
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader(previous);
+        }
+    }
+
+    public static Validator newValidator(DocumentBuilder builder)
+    {
+        ClassLoader previous = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
+            return builder.getSchema().newValidator();
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader(previous);
+        }
+    }
 
     public static Class loadClass(String name,
                                   Object fallbackClass)

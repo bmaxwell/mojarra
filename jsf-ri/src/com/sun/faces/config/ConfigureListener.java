@@ -686,7 +686,7 @@ public class ConfigureListener implements ServletRequestListener,
 
             SAXParserFactory factory = getConfiguredFactory();
             try {
-                SAXParser parser = factory.newSAXParser();
+                SAXParser parser = Util.newSAXParser(factory);
                 parser.parse(context.getResourceAsStream(WEB_XML_PATH),
                               new WebXmlHandler());
             } catch (Exception e) {
@@ -712,7 +712,7 @@ public class ConfigureListener implements ServletRequestListener,
          */
         private SAXParserFactory getConfiguredFactory() {
 
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParserFactory factory = Util.createSAXParserFactory();
             factory.setValidating(false);
             factory.setNamespaceAware(true);
             return factory;

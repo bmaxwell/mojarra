@@ -58,6 +58,7 @@ import com.sun.faces.config.processor.RenderKitConfigProcessor;
 import com.sun.faces.config.processor.ValidatorConfigProcessor;
 import com.sun.faces.util.FacesLogger;
 import com.sun.faces.util.Timer;
+import com.sun.faces.util.Util;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -458,7 +459,7 @@ public class ConfigManager {
                 if (FACES_SCHEMA_DEFAULT_NS.equals(documentNS)) {
                     DocumentBuilder builder = getBuilderForSchema(DbfFactory.FacesSchema.FACES_12);
                     if (builder.isValidating()) {
-                        builder.getSchema().newValidator().validate(domSource);
+                        Util.newValidator(builder).validate(domSource);
                         return ((Document) domSource.getNode());
                     } else {
                         return ((Document) domSource.getNode());
@@ -469,7 +470,7 @@ public class ConfigManager {
                     transformer.transform(domSource, domResult);
                     DocumentBuilder builder = getBuilderForSchema(DbfFactory.FacesSchema.FACES_11);
                     if (builder.isValidating()) {
-                        builder.getSchema().newValidator().validate(domSource);
+                        Util.newValidator(builder).validate(new DOMSource(domResult.getNode()));
                         return ((Document) domSource.getNode());
                     } else {
                         return ((Document) domSource.getNode());
@@ -491,7 +492,8 @@ public class ConfigManager {
          */
         private static Transformer getTransformer() throws Exception {
 
-            TransformerFactory factory = TransformerFactory.newInstance();
+            TransformerFactory factory = Util.createTransformerFactory();
+
             return factory
                  .newTransformer(new StreamSource(getInputStream(ConfigManager
                       .class.getResource(XSL))));
@@ -519,7 +521,7 @@ public class ConfigManager {
 
             DocumentBuilderFactory tFactory = DbfFactory.getFactory();
             tFactory.setValidating(false);
-            DocumentBuilder tBuilder = tFactory.newDocumentBuilder();
+            DocumentBuilder tBuilder = Util.newDocumentBuilder(tFactory);
             tBuilder.setEntityResolver(DbfFactory.FACES_ENTITY_RESOLVER);
             tBuilder.setErrorHandler(DbfFactory.FACES_ERROR_HANDLER);
             return tBuilder;
@@ -533,7 +535,7 @@ public class ConfigManager {
             } catch (UnsupportedOperationException upe) {
                 return getNonValidatingBuilder();
             }
-            DocumentBuilder builder = factory.newDocumentBuilder();
+            DocumentBuilder builder = Util.newDocumentBuilder(factory);
             builder.setEntityResolver(DbfFactory.FACES_ENTITY_RESOLVER);
             builder.setErrorHandler(DbfFactory.FACES_ERROR_HANDLER);
             return builder;

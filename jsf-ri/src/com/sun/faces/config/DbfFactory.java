@@ -36,6 +36,7 @@
 
 package com.sun.faces.config;
 
+import com.sun.faces.util.Util;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import org.w3c.dom.ls.LSResourceResolver;
@@ -127,7 +128,7 @@ public class DbfFactory {
 
     public static DocumentBuilderFactory getFactory() {
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory factory = Util.createDocumentBuilderFactory();
         factory.setNamespaceAware(true);
         factory.setIgnoringComments(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -146,7 +147,7 @@ public class DbfFactory {
             URLConnection conn = url.openConnection();
             conn.setUseCaches(false);
             InputStream in = conn.getInputStream();
-            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            SchemaFactory factory = Util.createSchemaFactory(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             factory.setResourceResolver((LSResourceResolver) DbfFactory.FACES_ENTITY_RESOLVER);
             FACES_12_SCHEMA = factory.newSchema(new StreamSource(in));
 
@@ -154,7 +155,7 @@ public class DbfFactory {
             conn = url.openConnection();
             conn.setUseCaches(false);
             in = conn.getInputStream();
-            factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            factory = Util.createSchemaFactory(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             factory.setResourceResolver((LSResourceResolver) DbfFactory.FACES_ENTITY_RESOLVER);
             FACES_11_SCHEMA = factory.newSchema(new StreamSource(in));
 
